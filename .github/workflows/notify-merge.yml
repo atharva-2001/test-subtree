@@ -1,0 +1,19 @@
+name: Notify Merge Repo
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Merge Repo Update
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          # Note: For cross-repository triggers, a PAT with repo scope is needed
+          # For this proof of concept, we're using GITHUB_TOKEN, but in production
+          # you would need to create a PAT and store it as a secret
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: atharva-2001/merge
+          event-type: update-subtree
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
